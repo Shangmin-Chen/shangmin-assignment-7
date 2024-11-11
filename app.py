@@ -192,13 +192,19 @@ def hypothesis_test():
 
     # TODO 12: Plot histogram of simulated statistics
     plot3_path = "static/plot3.png"
-    # Replace with code to generate and save the plot
-    plt.hist(simulated_stats, bins=20, alpha=0.7)
-    plt.axvline(observed_stat, color='red', linestyle='dashed', linewidth=2, label=f"Observed {parameter}")
-    plt.xlabel("Statistic")
-    plt.ylabel("Frequency")
+
+    # Plot histogram of simulated statistics (slopes or intercepts)
+    plt.figure(figsize=(10, 5))
+    plt.hist(simulated_stats, bins=20, color='gray', alpha=0.7)
+    plt.axvline(observed_stat, color='red', linestyle="dashed", linewidth=2, label="Observed")
+    plt.axvline(hypothesized_value, color='blue', linestyle="dotted", linewidth=2, label="Hypothesized")
     plt.legend()
+    plt.xlabel("Simulated Values")
+    plt.ylabel("Frequency")
+    plt.title(f"Histogram of Simulated {parameter.capitalize()} with Observed and Hypothesized Values")
     plt.savefig(plot3_path)
+    plt.close()
+
 
     # Return results to template
     return render_template(
@@ -282,15 +288,17 @@ def confidence_interval():
     # Plot the true parameter value
     plot4_path = "static/plot4.png"
     # Write code here to generate and save the plot
-    plt.plot(estimates, np.zeros_like(estimates), 'o', color='gray')  # Gray points for individual estimates
-    plt.axhline(0, color='black', linewidth=1)
-    plt.plot(mean_estimate, 0, 'o', color='blue', label="Mean Estimate")  # Blue point for mean estimate
-    plt.hlines(y=0, xmin=ci_lower, xmax=ci_upper, color='green', linewidth=2, label="Confidence Interval")  # Confidence interval
-    plt.axvline(true_param, color='red', linestyle='dashed', label="True Parameter")
-    plt.xlabel("Estimate")
-    plt.ylabel("Density")
+    plt.figure(figsize=(10, 5))
+    plt.plot(estimates, 'o', color='gray', alpha=0.5, label="Estimates")
+    plt.axhline(mean_estimate, color="green", linestyle="--", label="Mean Estimate")
+    plt.fill_between(range(len(estimates)), ci_lower, ci_upper, color="blue", alpha=0.2, label="Confidence Interval")
+    plt.axhline(true_param, color="red", linestyle="--", label="True Parameter")
     plt.legend()
+    plt.title(f"{parameter.capitalize()} Confidence Interval")
+    plt.xlabel("Simulation Index")
+    plt.ylabel(f"{parameter.capitalize()} Estimate")
     plt.savefig(plot4_path)
+    plt.close()
 
     # Return results to template
     return render_template(
